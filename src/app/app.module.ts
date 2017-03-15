@@ -3,18 +3,24 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { AppComponent } from './app.component';
+import { VideoModule } from './videos/video.module';
+
+import { HomeComponent } from './home.component';
+import { NavComponent } from './nav/nav.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    HomeComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,
+    VideoModule,
     FormsModule,
     HttpModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [HomeComponent]
 })
 export class AppModule { }
