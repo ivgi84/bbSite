@@ -19,12 +19,12 @@ export class VideoService {
 
   private videos: Video[] = [];
 
-constructor(private http:Http) {
-    this.requestUrl = this.generateRequestUrl();
+  constructor(private http:Http) {
+    this.generateRequestUrl();
   }
 
   generateRequestUrl(part:string='snippet',order:string='date',maxResult:number=20){
-      return `${VideoService.apiRef}?key=${VideoService.key}&channelId=${VideoService.channelId}&part=${part}&order=${order}&maxResult=${maxResult}`;
+      this.requestUrl = `${VideoService.apiRef}?key=${VideoService.key}&channelId=${VideoService.channelId}&part=${part}&order=${order}&maxResults=${maxResult}`;
   }
 
   getVideos() {

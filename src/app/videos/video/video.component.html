@@ -1,8 +1,9 @@
-<div class="media">
-    <div class="media-left">
-        <a href="https://youtube.com/watch?v={{video.videoId}}"><img alt="64x64" class="media-object" data-src="holder.js/64x64" src="{{video.imgSrc}}"></a>
+<a class="list-group-item" [ngClass]="{'active':activeIndex == itemId}" (click)="setActive()">
+    <div class="media">
+        <div class="media-left">
+            <a href="https://youtube.com/watch?v={{video.videoId}}"><img alt="64x64" class="media-object" data-src="holder.js/64x64" src="{{video.imgSrc}}"></a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">{{video.title}}</h4>{{video.description}}</div>
     </div>
-    <div class="media-body">
-        <h4 class="media-heading">{{video.title}}</h4>{{video.description}}</div>
-</div>
-<hr>
+</a>

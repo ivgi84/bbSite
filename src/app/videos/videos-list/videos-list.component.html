@@ -1,8 +1,12 @@
 <hr>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-7">
         <div class="list-group">
-            <bb-video-item *ngFor="let video of videos" [video]='video' [videoId]='i'></bb-video-item>
+            <bb-video-item *ngFor="let video of videos; let i = index;" (selected)="onSelection(i);" [activeIndex]='activeIndex' [video]='video' [itemId]='i'></bb-video-item>
         </div>
     </div>
-</div>
+    <div class="col-md-5">
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" [src]="selectedVideoSrc"></iframe>
+        </div>
+    </div>
