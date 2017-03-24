@@ -1,4 +1,4 @@
-import { Component, DebugNode, OnInit } from '@angular/core';
+import { Component, DebugNode, OnInit, Output } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Video } from '../video';
 
@@ -14,26 +14,43 @@ export class VideosListComponent implements OnInit {
   videos: Video[] = [];
 
   activeIndex = 0;
-  selectedVideoSrc:SafeResourceUrl;
+  @Output() selectedVideoSrc:SafeResourceUrl;
+  @Output() selectedVideo:Video;
 
   constructor(private videoService: VideoService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    this.videoService.generateRequestUrl('snippet','date',5);
+    this.videoService.generateRequestUrl('snippet','date',10);
     this.videoService.getVideos().subscribe(
       (videos: any) => {
-        videos.forEach((video,i)=>{
-            this.videos.push(new Video(video.id.videoId,video.snippet.thumbnails.default.url,video.snippet.title,video.snippet.description))
+        videos.forEach((video,i)=> {
+            this.videos.push(new Video(video.id.videoId,
+            video.snippet.thumbnails.default.url,
+            video.snippet.title,
+            video.snippet.description,
+            video.snippet.publishedAt,
+            this.checkIfNew(video.snippet.publishedAt)))
         })
         this.selectedVideoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.setIframeSourse(0));
+        this.selectedVideo = this.videos[0];
       }
     );
   }
 
   onSelection(id:number){
     this.activeIndex = id;
+    this.selectedVideo = this.videos[id];
+    console.log(this.selectedVideo);
     let url = this.setIframeSourse(id);
     this.selectedVideoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  checkIfNew(video){
+    let now = new Date().getTime();
+    let lastVideoDate = new Date(video).getTime();
+    let timeDiff = now - lastVideoDate;
+    let res = timeDiff / (1000 * 3600 * 24) < 1 ? true : false;
+    return res;
   }
 
   setIframeSourse(id:number){

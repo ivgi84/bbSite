@@ -14,9 +14,7 @@ export class VideoComponent implements OnInit{
   @Input() activeIndex: number;
   @Output() selected = new EventEmitter();
 
-  ngOnInit(){
-    console.log(this.itemId);
-  }
+  ngOnInit(){}
 
   setActive(){
     this.selected.emit(this.itemId);

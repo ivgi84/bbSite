@@ -6,7 +6,5 @@
         </div>
     </div>
     <div class="col-md-5">
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item" [src]="selectedVideoSrc"></iframe>
-        </div>
+        <bb-frame *ngIf='selectedVideo' [video]='selectedVideo' [videoSrc]='selectedVideoSrc'></bb-frame>
     </div>

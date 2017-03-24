@@ -5,11 +5,13 @@ import { VideosListComponent } from './videos-list/videos-list.component';
 import { VideoComponent } from './video/video.component';
 
 import { VideoService } from './video.service';
+import { FrameComponent } from './frame/frame.component';
 
 @NgModule({
     declarations:[
         VideosListComponent,
-        VideoComponent
+        VideoComponent,
+        FrameComponent
     ],
     providers:[VideoService],
     imports:[CommonModule],
