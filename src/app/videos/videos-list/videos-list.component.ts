@@ -40,7 +40,6 @@ export class VideosListComponent implements OnInit {
   onSelection(id:number){
     this.activeIndex = id;
     this.selectedVideo = this.videos[id];
-    console.log(this.selectedVideo);
     let url = this.setIframeSourse(id);
     this.selectedVideoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }

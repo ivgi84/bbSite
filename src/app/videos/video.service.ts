@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import { Video } from './video';
+import { Observable } from 'rxjs/Rx';
 
 
 @Injectable()
@@ -29,7 +30,23 @@ export class VideoService {
 
   getVideos() {
     return this.http.get(this.requestUrl)
-      .map((response: Response) => {return response.json().items})
+      .map((response: Response) => {console.log(response.json());return response.json().items})
+      .catch((error:any) => Observable.throw(error.json().error || 'Server Error'));
+  }
+
+  rateVideo(isLike:boolean){
+    let api = `https://www.googleapis.com/youtube/v3/videos/rate`;
+    let headers = new Headers ({'Content-Type':'application/json'});
+  }
+  getVideoStats(videoId:string){
+    let api = 'https://www.googleapis.com/youtube/v3/videos';
+    let part = 'contentDetails,statistics';
+    let apiRef = `${api}?key=${VideoService.key}&part=${part}&id=${videoId}`
+    return this.http.get(apiRef)
+    .map((response:Response) => {
+      return response.json().items
+    })
+    .catch((error:any) => Observable.throw(error.json().error));
   }
   
 }

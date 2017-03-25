@@ -1,3 +1,4 @@
+import { VideoStats } from './video-stats';
 export class Video {
     constructor (
         public videoId:string, 
@@ -5,5 +6,6 @@ export class Video {
         public title:string, 
         public description:string, 
         public date?:Date,
-        public isNew?:boolean){}
+        public isNew?:boolean,
+        public stats?:VideoStats){}
 }

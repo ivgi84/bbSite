@@ -1,10 +1,10 @@
 <hr>
 <div class="row">
     <div class="col-md-7">
-        <div class="list-group">
-            <bb-video-item *ngFor="let video of videos; let i = index;" (selected)="onSelection(i);" [activeIndex]='activeIndex' [video]='video' [itemId]='i'></bb-video-item>
-        </div>
+        <bb-video *ngIf='selectedVideo' [video]='selectedVideo' [videoSrc]='selectedVideoSrc'></bb-video>
     </div>
     <div class="col-md-5">
-        <bb-frame *ngIf='selectedVideo' [video]='selectedVideo' [videoSrc]='selectedVideoSrc'></bb-frame>
+        <div class="list-group">
+            <bb-video-list-item *ngFor="let video of videos; let i = index;" (selected)="onSelection(i);" [activeIndex]='activeIndex' [video]='video' [itemId]='i'></bb-video-list-item>
+        </div>
     </div>

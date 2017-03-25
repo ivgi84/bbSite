@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { VideosListComponent } from './videos-list/videos-list.component';
-import { VideoComponent } from './video/video.component';
+import { VideoListItemComponent } from './video-list-item/video-list-item.component';
 
 import { VideoService } from './video.service';
-import { FrameComponent } from './frame/frame.component';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
     declarations:[
         VideosListComponent,
-        VideoComponent,
-        FrameComponent
+        VideoListItemComponent,
+        VideoComponent
     ],
     providers:[VideoService],
     imports:[CommonModule],

@@ -1,23 +1,26 @@
-import { ApplicationInitStatus, Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { Video } from '../video';
+import { Component, OnInit, Input } from '@angular/core';
+import { Video } from '../video'; 
+import { VideoStats } from '../video-stats';
+import { VideoService } from '../video.service';
 
 @Component({
-  moduleId: module.id,
-  selector: 'bb-video-item',
+  selector: 'bb-video',
   templateUrl: './video.component.html',
-  styleUrls:['./video-item.css']
+  styleUrls: ['./video.component.css']
 })
-export class VideoComponent implements OnInit{
+export class VideoComponent implements OnInit {
 
+  @Input() videoSrc:string;
   @Input() video:Video;
-  @Input() itemId: number;
-  @Input() activeIndex: number;
-  @Output() selected = new EventEmitter();
+  
+  constructor(private videoService: VideoService) { }
 
-  ngOnInit(){}
-
-  setActive(){
-    this.selected.emit(this.itemId);
+  ngOnInit() {
+    this.videoService.getVideoStats(this.video.videoId).subscribe(
+      (data:any) => {
+         this.video.stats = new VideoStats(data[0].statistics.likeCount ,data[0].statistics.dislikeCount, data[0].statistics.viewCount, data[0].statistics.commentCount );
+      }
+    );
   }
 
 }
