@@ -9,3 +9,9 @@
 .fright {
     float: right;
 }
+
+.top-right {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}

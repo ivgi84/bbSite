@@ -20,8 +20,12 @@ export class VideosListComponent implements OnInit {
   constructor(private videoService: VideoService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    this.videoService.generateRequestUrl('snippet','date',10);
-    this.videoService.getVideos().subscribe(
+
+     let searchParams = {
+      maxResults:5
+    }
+    
+    this.videoService.getVideos(searchParams).subscribe(
       (videos: any) => {
         videos.forEach((video,i)=> {
             this.videos.push(new Video(video.id.videoId,

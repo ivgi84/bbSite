@@ -8,27 +8,35 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class VideoService {
 
-//'https://www.googleapis.com/youtube/v3/search?key=AIzaSyA_JsLIshs8g20bFXUgT6ok9AV1euCJ7eU&channelId=UCpH_GPYjvIzdWOyfeVGBe1Q&part=snippet,id&order=date&maxResults=20'
-
-  private static apiRef:string = 'https://www.googleapis.com/youtube/v3/search';
+  private static apiRef:string = 'https://www.googleapis.com/youtube/v3/';
   private static channelId:string = 'UCpH_GPYjvIzdWOyfeVGBe1Q';
   private static key:string = 'AIzaSyA_JsLIshs8g20bFXUgT6ok9AV1euCJ7eU';
-
-  private order:string = 'date';
 
   private requestUrl:string;
 
   private videos: Video[] = [];
 
-  constructor(private http:Http) {
-    this.generateRequestUrl();
+  constructor(private http:Http) {}
+
+  generateRequestUrl(api, defaults){
+    this.requestUrl = VideoService.apiRef + api + '?key=' + VideoService.key;
+    for(let val in defaults){
+        this.requestUrl += '&'+ val + '=' + defaults[val];
+    }
   }
 
-  generateRequestUrl(part:string='snippet',order:string='date',maxResult:number=20){
-      this.requestUrl = `${VideoService.apiRef}?key=${VideoService.key}&channelId=${VideoService.channelId}&part=${part}&order=${order}&maxResults=${maxResult}`;
-  }
+  getVideos(defaultParams) {
 
-  getVideos() {
+    let defaultSearchParams = {
+      part: 'snippet',
+      channelId: VideoService.channelId,
+      order:'date',
+      maxResults:10
+    };
+
+    let searchParams = Object.assign(defaultSearchParams, defaultParams);
+
+    this.generateRequestUrl('search',searchParams);
     return this.http.get(this.requestUrl)
       .map((response: Response) => {console.log(response.json());return response.json().items})
       .catch((error:any) => Observable.throw(error.json().error || 'Server Error'));
@@ -38,6 +46,7 @@ export class VideoService {
     let api = `https://www.googleapis.com/youtube/v3/videos/rate`;
     let headers = new Headers ({'Content-Type':'application/json'});
   }
+
   getVideoStats(videoId:string){
     let api = 'https://www.googleapis.com/youtube/v3/videos';
     let part = 'contentDetails,statistics';

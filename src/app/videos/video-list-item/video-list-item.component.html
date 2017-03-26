@@ -4,7 +4,7 @@
             <a href="https://youtube.com/watch?v={{video.videoId}}"><img alt="64x64" class="media-object" data-src="holder.js/64x64" src="{{video.imgSrc}}"></a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">{{video.title}} <span *ngIf="video.isNew" class="label label-info fright">New</span></h4>{{video.description}}</div>
+            <h4 class="media-heading">{{video.title}} <span *ngIf="video.isNew" class="label label-info fright top-right">New</span></h4>{{video.description}}</div>
         <span class="badge fright">{{video.date | date}}</span>
     </div>
 </a>
