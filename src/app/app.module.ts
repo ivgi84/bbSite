@@ -3,11 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { VideoModule } from './videos/video.module';
+import { VideoModule } from './videos/video.module'; 
 
-import { HomeComponent } from './home.component';
+import { HomeComponent } from './home.component'
 import { NavComponent } from './nav/nav.component';
-
 
 @NgModule({
   declarations: [
@@ -16,9 +15,9 @@ import { NavComponent } from './nav/nav.component';
   ],
   imports: [
     BrowserModule,
-    VideoModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    VideoModule
   ],
   providers: [],
   bootstrap: [HomeComponent]

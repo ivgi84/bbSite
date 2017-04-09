@@ -6,15 +6,14 @@ import { VideoService } from '../video.service';
 
 @Component({
   selector: 'bb-videos-list',
-  templateUrl: './videos-list.component.html',
-  styleUrls:['./video-list.css']
+  templateUrl: './videos-list.component.html'
 })
 export class VideosListComponent implements OnInit {
 
   videos: Video[] = [];
 
   activeIndex = 0;
-  @Output() selectedVideoSrc:SafeResourceUrl;
+  @Output() selectedVideoSrc:SafeResourceUrl | string;
   @Output() selectedVideo:Video;
 
   constructor(private videoService: VideoService, private sanitizer: DomSanitizer) { }

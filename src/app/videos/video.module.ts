@@ -6,12 +6,14 @@ import { VideoListItemComponent } from './video-list-item/video-list-item.compon
 
 import { VideoService } from './video.service';
 import { VideoComponent } from './video/video.component';
+import { ShortDescriptionPipe } from './short-description.pipe';
 
 @NgModule({
     declarations:[
         VideosListComponent,
         VideoListItemComponent,
-        VideoComponent
+        VideoComponent,
+        ShortDescriptionPipe
     ],
     providers:[VideoService],
     imports:[CommonModule],
