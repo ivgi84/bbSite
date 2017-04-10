@@ -10,22 +10,33 @@ import { VideoService } from '../video.service';
 })
 export class VideosListComponent implements OnInit {
 
-  videos: Video[] = [];
+  private nextPageToken: string;
 
+  videos: Video[] = [];
   activeIndex = 0;
-  @Output() selectedVideoSrc:SafeResourceUrl | string;
+  @Output() selectedVideoSrc:SafeResourceUrl | string = null;
   @Output() selectedVideo:Video;
 
   constructor(private videoService: VideoService, private sanitizer: DomSanitizer) { }
 
-  ngOnInit() {
-
-     let searchParams = {
-      maxResults:5
+  private searchParams = {
+      maxResults:20
     }
-    
-    this.videoService.getVideos(searchParams).subscribe(
-      (videos: any) => {
+
+  ngOnInit() {
+      this.getVideos(false); //parameter is for loading more videos, false means load regular
+  }
+
+  getVideos(loadMore){
+    this.videoService.getVideos(this.searchParams, loadMore).subscribe(
+          (videos: any) => {
+              this.setVideosArr(videos)
+              this.setVideoSelected();
+          }
+    );
+  }
+
+  setVideosArr(videos:any){
         videos.forEach((video,i)=> {
             this.videos.push(new Video(video.id.videoId,
             video.snippet.thumbnails.default.url,
@@ -34,12 +45,15 @@ export class VideosListComponent implements OnInit {
             video.snippet.publishedAt,
             this.checkIfNew(video.snippet.publishedAt)))
         })
-        this.selectedVideoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.setIframeSourse(0));
-        this.selectedVideo = this.videos[0];
-      }
-    );
   }
 
+  setVideoSelected(){
+    if(!this.selectedVideoSrc){
+          this.selectedVideoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.setIframeSourse(0));
+          this.selectedVideo = this.videos[0]; 
+      }
+  }
+  
   onSelection(id:number){
     this.activeIndex = id;
     this.selectedVideo = this.videos[id];
@@ -57,6 +71,10 @@ export class VideosListComponent implements OnInit {
 
   setIframeSourse(id:number){
     return 'https://youtube.com/embed/'+ this.videos[id].videoId
+  }
+
+  loadMore(){
+    this.getVideos(true);
   }
 
 }

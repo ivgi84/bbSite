@@ -19,9 +19,21 @@ export class VideoComponent implements OnInit, OnChanges {
     this.videoService.getVideoStats(this.video.videoId).subscribe(
       (data:any) => {    
          this.video.stats = new VideoStats(data[0].statistics.likeCount ,data[0].statistics.dislikeCount, data[0].statistics.viewCount, data[0].statistics.commentCount );
+         if(this.video.stats.comments > 0){
+            this.loadComments();
+         }
       }
     );
   }
+
+  loadComments(){
+    this.videoService.getCommentForVideo(this.video.videoId).subscribe(
+      (data:any) => {
+        console.log(data);
+      }
+    )
+  }
+
   ngOnInit() {  }
 
   ngOnChanges(){

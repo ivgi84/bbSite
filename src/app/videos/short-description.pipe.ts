@@ -6,12 +6,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ShortDescriptionPipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    var re = value.match(/^.{0,50}[\S]*/);
-    var l = re[0].length;
-    var re = re[0].replace(/\s$/,'');
-    if(l < value.length)
-        re = re + "...";
-    return re;
+    var regex = value.match(/^.{0,60}[\S]*/);
+    var length = regex[0].length;
+    var regex = regex[0].replace(/\s$/,'');
+    if(length < value.length)
+        regex = regex + "...";
+    return regex;
   }
 
 }

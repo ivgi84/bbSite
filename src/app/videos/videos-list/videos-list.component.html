@@ -7,4 +7,5 @@
         <div class="list-group">
             <bb-video-list-item *ngFor="let video of videos; let i = index;" (selected)="onSelection(i);" [activeIndex]='activeIndex' [video]='video' [itemId]='i'></bb-video-list-item>
         </div>
+        <button class="btn btn-primary" type="button" (click)="loadMore()">Load more </button>
     </div>

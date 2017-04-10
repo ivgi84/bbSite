@@ -1,22 +1,22 @@
-<h3>{{video.title}}</h3>
 <div class="embed-responsive embed-responsive-16by9">
     <iframe class="embed-responsive-item" [src]="videoSrc"></iframe>
 </div>
+<h3>{{video.title}}</h3>
 <div class="rating float-right">
     <div class="stats" *ngIf="video.stats">
-        <div class="like">
-            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-            <span class="glyphicon-class">{{video.stats.likes}}</span>
-        </div>
-        <div class="like">
-            <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
-            <span class="glyphicon-class">{{video.stats.dislikes}}</span>
-        </div>
         <div class="views">
             <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
             <span class="glyphicon-class">{{video.stats.views}} views</span>
         </div>
-        <div class="views">
+        <div class="like">
+            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+            <span class="glyphicon-class">{{video.stats.likes}}</span>
+        </div>
+        <div class="like float-right">
+            <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+            <span class="glyphicon-class">{{video.stats.dislikes}}</span>
+        </div>
+        <div class="comments" *ngIf="video.stats.comments > 0">
             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
             <span class="glyphicon-class">{{video.stats.comments}} comments</span>
         </div>

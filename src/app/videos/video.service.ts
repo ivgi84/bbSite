@@ -13,8 +13,8 @@ export class VideoService {
   private static key:string = 'AIzaSyA_JsLIshs8g20bFXUgT6ok9AV1euCJ7eU';
 
   private requestUrl:string;
-
   private videos: Video[] = [];
+  private nextPageToken:string = null;
 
   constructor(private http:Http) {}
 
@@ -25,8 +25,8 @@ export class VideoService {
     }
   }
 
-  getVideos(defaultParams) {
-
+  getVideos(defaultParams, loadMore?) : Observable<Video[]> {
+  
     let defaultSearchParams = {
       part: 'snippet',
       channelId: VideoService.channelId,
@@ -35,22 +35,38 @@ export class VideoService {
     };
 
     let searchParams = Object.assign(defaultSearchParams, defaultParams);
-
+    if(loadMore)
+      searchParams['pageToken'] = this.nextPageToken;
+    
     this.generateRequestUrl('search',searchParams);
     return this.http.get(this.requestUrl)
-      .map((response: Response) => {console.log(response.json());return response.json().items})
+      .map((response: Response) => {
+        console.log(response.json()); 
+        this.nextPageToken = response.json().nextPageToken; 
+        return response.json().items})
       .catch((error:any) => Observable.throw(error.json().error || 'Server Error'));
   }
 
   rateVideo(isLike:boolean){
-    let api = `https://www.googleapis.com/youtube/v3/videos/rate`;
+    const api = `https://www.googleapis.com/youtube/v3/videos/rate`;
     let headers = new Headers ({'Content-Type':'application/json'});
   }
 
   getVideoStats(videoId:string){
-    let api = 'https://www.googleapis.com/youtube/v3/videos';
+    const api = 'https://www.googleapis.com/youtube/v3/videos';
     let part = 'contentDetails,statistics';
     let apiRef = `${api}?key=${VideoService.key}&part=${part}&id=${videoId}`
+    return this.http.get(apiRef)
+    .map((response:Response) => {
+      return response.json().items
+    })
+    .catch((error:any) => Observable.throw(error.json().error));
+  }
+
+    getCommentForVideo(videoId:string){
+    const api = 'https://www.googleapis.com/youtube/v3/commentThreads';
+    let part = 'id,replies,snippet';
+    let apiRef = `${api}?key=${VideoService.key}&part=${part}&videoId=${videoId}`
     return this.http.get(apiRef)
     .map((response:Response) => {
       return response.json().items
