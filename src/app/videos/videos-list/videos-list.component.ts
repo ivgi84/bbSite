@@ -20,20 +20,17 @@ export class VideosListComponent implements OnInit {
   constructor(private videoService: VideoService, private sanitizer: DomSanitizer) { }
 
   private searchParams = {
-      maxResults:20
+      maxResults:5
     }
 
   ngOnInit() {
-      this.getVideos(false); //parameter is for loading more videos, false means load regular
-  }
-
-  getVideos(loadMore){
-    this.videoService.getVideos(this.searchParams, loadMore).subscribe(
-          (videos: any) => {
-              this.setVideosArr(videos)
-              this.setVideoSelected();
-          }
-    );
+      this.videoService.videoSubject.subscribe(
+        (videos:any) =>{
+            this.setVideosArr(videos)
+            this.setVideoSelected();
+        }
+      )
+      this.videoService.getVideos();
   }
 
   setVideosArr(videos:any){
@@ -74,7 +71,7 @@ export class VideosListComponent implements OnInit {
   }
 
   loadMore(){
-    this.getVideos(true);
+    this.videoService.getVideos({},true);
   }
 
 }

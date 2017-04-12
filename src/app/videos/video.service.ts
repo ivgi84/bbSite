@@ -3,6 +3,7 @@ import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import { Video } from './video';
 import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
 
 
 @Injectable()
@@ -16,6 +17,8 @@ export class VideoService {
   private videos: Video[] = [];
   private nextPageToken:string = null;
 
+  videoSubject = new Subject<Video>();
+
   constructor(private http:Http) {}
 
   generateRequestUrl(api, defaults){
@@ -25,8 +28,8 @@ export class VideoService {
     }
   }
 
-  getVideos(defaultParams, loadMore?) : Observable<Video[]> {
-  
+
+  getVideos(defaultParams?, loadMore?) {
     let defaultSearchParams = {
       part: 'snippet',
       channelId: VideoService.channelId,
@@ -39,12 +42,13 @@ export class VideoService {
       searchParams['pageToken'] = this.nextPageToken;
     
     this.generateRequestUrl('search',searchParams);
+
     return this.http.get(this.requestUrl)
-      .map((response: Response) => {
-        console.log(response.json()); 
+      .catch((error:any) => Observable.throw(error.json().error || 'Server Error'))
+      .subscribe((response:any)=>{
         this.nextPageToken = response.json().nextPageToken; 
-        return response.json().items})
-      .catch((error:any) => Observable.throw(error.json().error || 'Server Error'));
+        this.videoSubject.next(response.json().items);
+      });
   }
 
   rateVideo(isLike:boolean){
