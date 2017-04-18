@@ -1,6 +1,7 @@
 import { Component, OnInit,OnChanges, Input } from '@angular/core';
 import { Video } from '../video'; 
 import { VideoStats } from '../video-stats';
+import { Comment } from '../comment'; 
 import { VideoService } from '../video.service';
 
 @Component({
@@ -29,7 +30,12 @@ export class VideoComponent implements OnInit, OnChanges {
   loadComments(){
     this.videoService.getCommentForVideo(this.video.videoId).subscribe(
       (data:any) => {
-        console.log(data);
+        let comments: Comment[] = [];
+        data.forEach((comment, ind) => {
+          let cache = comment.snippet.topLevelComment.snippet;
+          comments.push(new Comment(cache.textDisplay,cache.authorDisplayName, cache.authorProfileImageUrl,cache.publishedAt));
+        });
+        this.video.comments = comments;
       }
     )
   }

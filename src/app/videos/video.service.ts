@@ -28,7 +28,6 @@ export class VideoService {
     }
   }
 
-
   getVideos(defaultParams?, loadMore?) {
     let defaultSearchParams = {
       part: 'snippet',
@@ -68,14 +67,14 @@ export class VideoService {
   }
 
     getCommentForVideo(videoId:string){
-    const api = 'https://www.googleapis.com/youtube/v3/commentThreads';
-    let part = 'id,replies,snippet';
-    let apiRef = `${api}?key=${VideoService.key}&part=${part}&videoId=${videoId}`
-    return this.http.get(apiRef)
-    .map((response:Response) => {
-      return response.json().items
-    })
-    .catch((error:any) => Observable.throw(error.json().error));
+      const api = 'https://www.googleapis.com/youtube/v3/commentThreads';
+      let part = 'id,replies,snippet';
+      let apiRef = `${api}?key=${VideoService.key}&part=${part}&videoId=${videoId}`
+      return this.http.get(apiRef)
+        .map((response:Response) => {
+          return response.json().items
+        })
+      .catch((error:any) => Observable.throw(error.json().error));
   }
   
 }

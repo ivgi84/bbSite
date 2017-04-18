@@ -22,3 +22,8 @@
         </div>
     </div>
 </div>
+<div class="commentsWrap">
+    <p *ngFor="let comment of video.comments; let i = index">
+        {{comment.displayText}}
+    </p>
+</div>
