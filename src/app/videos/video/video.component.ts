@@ -34,8 +34,18 @@ export class VideoComponent implements OnInit, OnChanges {
         data.forEach((comment, ind) => {
           let cache = comment.snippet.topLevelComment.snippet;
           comments.push(new Comment(cache.textDisplay,cache.authorDisplayName, cache.authorProfileImageUrl,cache.publishedAt));
+          if(comment.replies){
+            let replies = comment.replies.comments;
+            let commentReplyes = [];
+            replies.forEach((reply, ind) =>{
+                commentReplyes.push(new Comment(reply.snippet.textDisplay, reply.snippet.authorDisplayName,reply.snippet.authorProfileImageUrl, reply.snippet.publishedAt));
+            });
+            debugger;
+            comment.replies = commentReplyes;
+          }
         });
         this.video.comments = comments;
+        console.log(this.video.comments);
       }
     )
   }

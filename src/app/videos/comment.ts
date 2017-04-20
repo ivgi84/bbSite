@@ -3,6 +3,7 @@ export class Comment {
         public displayText:string,
         public userName:string,
         public userImg:string,
-        public publishDate:Date
+        public publishDate:Date,
+        public replies?:Comment
     ){}
 }
