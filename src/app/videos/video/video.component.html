@@ -23,7 +23,12 @@
     </div>
 </div>
 <div class="commentsWrap">
-    <p *ngFor="let comment of video.comments; let i = index">
-        {{comment.displayText}}
-    </p>
+    <div *ngFor="let comment of video.comments; let i = index">
+        <p>{{comment.displayText}}</p>
+        <div class="commentReply" *ngIf="comment.replies">
+            <p *ngFor="let reply of comment.replies">
+                {{reply.displayText}}
+            </p>
+        </div>
+    </div>
 </div>

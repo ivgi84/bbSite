@@ -31,18 +31,18 @@ export class VideoComponent implements OnInit, OnChanges {
     this.videoService.getCommentForVideo(this.video.videoId).subscribe(
       (data:any) => {
         let comments: Comment[] = [];
+        let replies:Comment[] = [];
         data.forEach((comment, ind) => {
           let cache = comment.snippet.topLevelComment.snippet;
-          comments.push(new Comment(cache.textDisplay,cache.authorDisplayName, cache.authorProfileImageUrl,cache.publishedAt));
+          let userComment = new Comment(cache.textDisplay,cache.authorDisplayName, cache.authorProfileImageUrl,cache.publishedAt);
           if(comment.replies){
-            let replies = comment.replies.comments;
-            let commentReplyes = [];
-            replies.forEach((reply, ind) =>{
-                commentReplyes.push(new Comment(reply.snippet.textDisplay, reply.snippet.authorDisplayName,reply.snippet.authorProfileImageUrl, reply.snippet.publishedAt));
+            let replyComments = comment.replies.comments;
+            replyComments.forEach((reply, ind) =>{
+                replies.push(new Comment(reply.snippet.textDisplay, reply.snippet.authorDisplayName,reply.snippet.authorProfileImageUrl, reply.snippet.publishedAt));
             });
-            debugger;
-            comment.replies = commentReplyes;
+            userComment.replies = replies;
           }
+          comments.push(userComment);
         });
         this.video.comments = comments;
         console.log(this.video.comments);

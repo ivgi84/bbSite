@@ -4,6 +4,6 @@ export class Comment {
         public userName:string,
         public userImg:string,
         public publishDate:Date,
-        public replies?:Comment
+        public replies?:Comment[]
     ){}
 }
