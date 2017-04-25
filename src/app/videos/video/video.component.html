@@ -24,11 +24,29 @@
 </div>
 <div class="commentsWrap">
     <div *ngFor="let comment of video.comments; let i = index">
-        <p>{{comment.displayText}}</p>
-        <div class="commentReply" *ngIf="comment.replies">
-            <p *ngFor="let reply of comment.replies">
-                {{reply.displayText}}
-            </p>
+        <div class="comment">
+            <div class="float-left">
+                <img src="{{comment.userImg}}" alt="">
+            </div>
+            <div class="float-left">
+                <a>{{comment.userName}}</a>
+                <span [innerHTML]="comment.displayText"></span>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div *ngIf="comment.replies">
+            <div *ngFor="let reply of comment.replies">
+                <div class="comment reply">
+                    <div class="float-left">
+                        <img src="{{reply.userImg}}" alt="">
+                    </div>
+                    <div class="float-left w80p">
+                        <a>{{reply.userName}}</a>
+                        <span [innerHTML]="reply.displayText"></span>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

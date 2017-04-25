@@ -6,6 +6,10 @@
     float: left;
 }
 
+.w80p {
+    width: 80%;
+}
+
 bb-video-item:first-of-type .list-group-item {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;

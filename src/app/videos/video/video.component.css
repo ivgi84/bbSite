@@ -17,3 +17,32 @@ h3 {
 .commentsWrap {
     clear: both;
 }
+
+.comment img {
+    margin-right: 5px;
+    width: 48px;
+}
+
+.comment {
+    margin-bottom: 10px;
+}
+
+.comment a {
+    display: block;
+    margin: 0;
+    padding-bottom: 5px;
+    color: #128ee9;
+    font-weight: bold;
+}
+
+.comment.reply {
+    margin-left: 25px;
+}
+
+.comment.reply img {
+    width: auto;
+}
+
+.comment.reply a {
+    margin: 0;
+}

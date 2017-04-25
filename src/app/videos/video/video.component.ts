@@ -21,6 +21,7 @@ export class VideoComponent implements OnInit, OnChanges {
       (data:any) => {    
          this.video.stats = new VideoStats(data[0].statistics.likeCount ,data[0].statistics.dislikeCount, data[0].statistics.viewCount, data[0].statistics.commentCount );
          if(this.video.stats.comments > 0){
+            this.video.comments = [];
             this.loadComments();
          }
       }
@@ -42,9 +43,8 @@ export class VideoComponent implements OnInit, OnChanges {
             });
             userComment.replies = replies;
           }
-          comments.push(userComment);
+          this.video.comments.push(userComment);
         });
-        this.video.comments = comments;
         console.log(this.video.comments);
       }
     )
