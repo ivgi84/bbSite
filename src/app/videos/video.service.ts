@@ -28,15 +28,15 @@ export class VideoService {
     }
   }
 
-  getVideos(defaultParams?, loadMore?) {
+  getVideos(params?, loadMore?) {
     let defaultSearchParams = {
       part: 'snippet',
       channelId: VideoService.channelId,
       order:'date',
-      maxResults:10
+      maxResults:5
     };
 
-    let searchParams = Object.assign(defaultSearchParams, defaultParams);
+    let searchParams = Object.assign(defaultSearchParams, params);
     if(loadMore)
       searchParams['pageToken'] = this.nextPageToken;
     

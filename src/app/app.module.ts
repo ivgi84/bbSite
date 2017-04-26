@@ -7,11 +7,13 @@ import { VideoModule } from './videos/video.module';
 
 import { HomeComponent } from './home.component'
 import { NavComponent } from './nav/nav.component';
+import { SignInFormComponent } from './nav/sign-in-form/sign-in-form.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    NavComponent
+    NavComponent,
+    SignInFormComponent
   ],
   imports: [
     BrowserModule,
