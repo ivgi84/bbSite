@@ -20,19 +20,20 @@ export class SignInService {
   constructor() {}
 
   private auth;
+  private gapi;
 
   init(){  
     if (document.readyState === "complete" || document.readyState === "interactive") {
-          (function (d, s, id,c) {
+          (function (d, s, id, c) {
               var js, fjs = d.getElementsByTagName(s)[0];
               if (d.getElementById(id)) return;
               js = d.createElement(s); js.id = id;
               fjs.parentNode.insertBefore(js, fjs);
               js.onload = function () {
                   window.gapi.load('auth2', function () {
-                    debugger;
                       window.gapi.auth2.init({ client_id: SignInService.clientID, 'scope': 'profile email' });
                       c.auth = window.gapi.auth2.getAuthInstance();
+                      c.gapi = window.gapi;
                   });
               };
               js.src = "https://apis.google.com/js/platform.js";
@@ -44,9 +45,34 @@ export class SignInService {
 
    signIn(){
      if(this.auth){
-       debugger;
-       this.auth
+       debugger
+       this.auth.signIn();
+       this.auth.isSignedIn.listen(this.updateSigninStatus);
+       this.updateSigninStatus(this.auth.isSignedIn.get());
      }
    }
+
+  updateSigninStatus(isSignedIn){
+    debugger;
+    if(isSignedIn){
+      this.getUserData();
+    }
+    else{
+      
+    }
+  }
+
+  getUserData(){
+    debugger
+     this.gapi.client.people.people.get({
+          resourceName: 'people/me'
+        }).then(function(response) {
+          debugger;
+          console.log('Hello, ' + response.result.names[0].givenName);
+        }, function(reason) {
+          debugger;
+          console.log('Error: ' + reason.result.error.message);
+        });
+  }
 
 }
