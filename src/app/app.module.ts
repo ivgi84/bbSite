@@ -9,6 +9,8 @@ import { HomeComponent } from './home.component'
 import { NavComponent } from './nav/nav.component';
 import { SignInFormComponent } from './nav/sign-in-form/sign-in-form.component';
 
+import { SignInService } from './nav/sign-in-form/sign-in.service';
+
 @NgModule({
   declarations: [
     HomeComponent,
@@ -21,7 +23,7 @@ import { SignInFormComponent } from './nav/sign-in-form/sign-in-form.component';
     HttpModule,
     VideoModule
   ],
-  providers: [],
+  providers: [SignInService],
   bootstrap: [HomeComponent]
 })
 export class AppModule { }

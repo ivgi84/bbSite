@@ -31,7 +31,6 @@ export class VideoComponent implements OnInit, OnChanges {
   loadComments(){
     this.videoService.getCommentForVideo(this.video.videoId).subscribe(
       (data:any) => {
-        debugger;
         let comments: Comment[] = [];
         data.forEach((comment, ind) => {
           let replies:Comment[] = [];

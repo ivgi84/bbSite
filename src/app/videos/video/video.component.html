@@ -27,7 +27,7 @@
     <div *ngFor="let comment of video.comments; let i = index">
         <div class="comment">
             <div class="float-left">
-                <img src="{{comment.userImg}}" alt="">
+                <img [src]="comment.userImg" alt="">
             </div>
             <div class="float-left">
                 <a>{{comment.userName}}</a>
@@ -39,7 +39,7 @@
             <div *ngFor="let reply of comment.replies">
                 <div class="comment reply">
                     <div class="float-left">
-                        <img src="{{reply.userImg}}" alt="">
+                        <img [src]="reply.userImg" alt="">
                     </div>
                     <div class="float-left w80p">
                         <a>{{reply.userName}}</a>
