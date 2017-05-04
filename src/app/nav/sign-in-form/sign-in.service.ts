@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Rx';
 declare var window:any;
 declare var c:any;
 
@@ -7,20 +10,12 @@ export class SignInService {
 
   private static clientID = '45085932959-d7fl97m5qaomr02vttqoa05cabncrhnb.apps.googleusercontent.com';
   private clientSecret = 'MMumTuG3wF-i0xfcpuSBfx5S';
-  private oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
-
-  private myParams = {
-    'clientid' : '45085932959-d7fl97m5qaomr02vttqoa05cabncrhnb.apps.googleusercontent.com', //You need to set client id
-    'cookiepolicy' : 'single_host_origin',
-    'callback' : 'loginCallback', //callback function
-    'approvalprompt':'force',
-    'scope' : 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read'
-  };
 
   constructor() {}
 
-  private auth;
-  private gapi;
+  private auth:any;
+  public user = new Subject();
+  //public user = Observable.create();
 
   init(){  
     if (document.readyState === "complete" || document.readyState === "interactive") {
@@ -33,7 +28,8 @@ export class SignInService {
                   window.gapi.load('auth2', function () {
                       window.gapi.auth2.init({ client_id: SignInService.clientID, 'scope': 'profile email' });
                       c.auth = window.gapi.auth2.getAuthInstance();
-                      c.gapi = window.gapi;
+                      if(c.isUserSignedIn)
+                        c.getUser();
                   });
               };
               js.src = "https://apis.google.com/js/platform.js";
@@ -42,37 +38,34 @@ export class SignInService {
           document.addEventListener("DOMContentLoaded", this.init.bind(this));
       }  
   }
+  
 
    signIn(){
      if(this.auth){
-       debugger
-       this.auth.signIn();
-       this.auth.isSignedIn.listen(this.updateSigninStatus);
-       this.updateSigninStatus(this.auth.isSignedIn.get());
+       this.auth.signIn({ 'scope': 'profile email' }).then(()=>{
+            this.auth.isSignedIn.listen(this.updateSigninStatus.bind(this));
+            this.updateSigninStatus(this.auth.isSignedIn.get());
+         });
      }
    }
 
+   signOut(){
+     this.auth.signOut().then(()=>{
+        this.user.next(null);
+     });
+   }
+
+   get isUserSignedIn(){
+     return this.auth.isSignedIn.get();
+   }
+
   updateSigninStatus(isSignedIn){
-    debugger;
-    if(isSignedIn){
-      this.getUserData();
-    }
-    else{
-      
-    }
+    if(isSignedIn)
+      this.getUser();
   }
 
-  getUserData(){
-    debugger
-     this.gapi.client.people.people.get({
-          resourceName: 'people/me'
-        }).then(function(response) {
-          debugger;
-          console.log('Hello, ' + response.result.names[0].givenName);
-        }, function(reason) {
-          debugger;
-          console.log('Error: ' + reason.result.error.message);
-        });
+  getUser(){
+    let user = this.auth.currentUser.get();
+    this.user.next(user.getBasicProfile());
   }
-
 }
