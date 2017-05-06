@@ -1,5 +1,6 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { SignInService } from './sign-in.service';
+import { User } from './user';
 
 @Component({
   selector: 'bb-sign-in-form',
@@ -8,15 +9,16 @@ import { SignInService } from './sign-in.service';
 })
 export class SignInFormComponent implements OnInit {
 
-  constructor(private SignInService:SignInService) { }
+  constructor(private SignInService:SignInService, private ref:ChangeDetectorRef) { }
 
-  public user = null;
+  public user:User = null;
 
   ngOnInit() {
     this.SignInService.init();
  
-    this.SignInService.user.subscribe((response:any) => {
-        this.user = response;
+    this.SignInService.userSbj.subscribe((user:User) => {
+        this.user = user;
+        this.ref.detectChanges();
     });
   }
 

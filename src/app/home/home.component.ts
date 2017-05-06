@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'bb-root',
+  selector: 'bb-home',
   templateUrl: './home.component.html'
 })
-export class HomeComponent {
-  
-}
+export class HomeComponent {}

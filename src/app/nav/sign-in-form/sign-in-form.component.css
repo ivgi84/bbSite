@@ -7,3 +7,10 @@
     width: 35px;
     border-radius: 3px;
 }
+
+.user p {
+    margin: 0 0 0 5px;
+    float: right;
+    color: #fff;
+    line-height: 17px;
+}

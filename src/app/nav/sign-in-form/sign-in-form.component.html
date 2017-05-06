@@ -2,6 +2,7 @@
     <button type="button" class="btn btn-success" (click)="signIn()" *ngIf="!user">Sign in with Google</button>
     <button type="button" class="btn btn-success" (click)="signOut()" *ngIf="user">Sign Out</button>
     <div *ngIf="user" class="user">
-        <img [src]="user.Paa" alt="">
+        <img [src]="user.avatar" alt="">
+        <p>Howdy <br>{{user.fname}}</p>
     </div>
 </form>

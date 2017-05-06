@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/Rx';
-import { Observable } from 'rxjs/Rx';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
+import { User } from './user';
 declare var window:any;
 declare var c:any;
 
@@ -14,8 +13,7 @@ export class SignInService {
   constructor() {}
 
   private auth:any;
-  public user = new Subject();
-  //public user = Observable.create();
+  public userSbj = new Subject();
 
   init(){  
     if (document.readyState === "complete" || document.readyState === "interactive") {
@@ -43,15 +41,14 @@ export class SignInService {
    signIn(){
      if(this.auth){
        this.auth.signIn({ 'scope': 'profile email' }).then(()=>{
-            this.auth.isSignedIn.listen(this.updateSigninStatus.bind(this));
-            this.updateSigninStatus(this.auth.isSignedIn.get());
+            this.getUser();
          });
      }
    }
 
    signOut(){
      this.auth.signOut().then(()=>{
-        this.user.next(null);
+        this.userSbj.next(null);
      });
    }
 
@@ -59,13 +56,9 @@ export class SignInService {
      return this.auth.isSignedIn.get();
    }
 
-  updateSigninStatus(isSignedIn){
-    if(isSignedIn)
-      this.getUser();
-  }
-
   getUser(){
-    let user = this.auth.currentUser.get();
-    this.user.next(user.getBasicProfile());
+    let data = this.auth.currentUser.get().getBasicProfile();
+    let me = new User(data.Eea, data.ofa, data.wea, data.Paa, data.U3);
+    this.userSbj.next(me);
   }
 }
