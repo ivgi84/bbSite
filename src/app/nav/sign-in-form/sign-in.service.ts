@@ -8,6 +8,7 @@ export class SignInService {
 
   private static clientID = '45085932959-d7fl97m5qaomr02vttqoa05cabncrhnb.apps.googleusercontent.com';
   private clientSecret = 'MMumTuG3wF-i0xfcpuSBfx5S';
+  
 
   constructor() {}
 
@@ -29,7 +30,8 @@ export class SignInService {
                         c.getUser();
                   });
               };
-              js.src = "https://apis.google.com/js/platform.js";
+
+              js.src = "https://apis.google.com/js/client:plusone.js";
           } (document, 'script', 'google-jssdk',this));
       } else {
           document.addEventListener("DOMContentLoaded", this.init.bind(this));
@@ -59,5 +61,9 @@ export class SignInService {
     let data = this.auth.currentUser.get().getBasicProfile();
     let me = new User(data.Eea, data.ofa, data.wea, data.Paa, data.U3);
     this.userSbj.next(me);
+  }
+
+  get token(){
+    return this.auth && this.auth.currentUser && this.auth.currentUser.get().Zi.access_token;
   }
 }

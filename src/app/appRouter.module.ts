@@ -1,4 +1,5 @@
 import { NgModule }             from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -17,7 +18,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   declarations:[HomeComponent, EditComponent, UploadComponent],
-  imports: [VideoModule, FormsModule, RouterModule.forRoot(appRoutes) ],
+  imports: [CommonModule, VideoModule, FormsModule, RouterModule.forRoot(appRoutes) ],
   exports: [ RouterModule ]
 })
 

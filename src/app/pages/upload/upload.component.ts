@@ -1,31 +1,39 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
+import { Component, OnInit } from '@angular/core';
+import { UploadService } from './upload.service';
 
 @Component({
   selector: 'bb-upload',
   templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.css']
+  styleUrls: ['./upload.component.css'],
+  providers:[UploadService]
 })
 export class UploadComponent implements OnInit{
 
-  constructor() { }
+  private file = null;
+  isSubmited:boolean = false;
 
-  submited = false;
-
-  model = {
+  video = {
     title:'',
     description:'',
-    file:''
+    file: this.file
   }
 
-  OnSubmit(){
-    console.log(this.model);
-    this.submited = true;
+  constructor(private uploadService: UploadService) {}
+
+  onSubmit(){
+    debugger;
+    this.isSubmited = true;
+    this.uploadService.upload(this.video);
   }
 
-  ngOnInit() {
+  onChange(event){
+    if(event.srcElement.files.length > 0){
+      this.video.file = event.srcElement.files[0];
+    }
+    
   }
-  onChange(){
-    console.log(this.model);
-  }
+
+  ngOnInit() {}
 
 }
