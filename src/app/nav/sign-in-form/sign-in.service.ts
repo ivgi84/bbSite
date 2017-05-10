@@ -6,9 +6,7 @@ declare var window:any;
 @Injectable()
 export class SignInService {
 
-  private static clientID = '45085932959-d7fl97m5qaomr02vttqoa05cabncrhnb.apps.googleusercontent.com';
-  private clientSecret = 'MMumTuG3wF-i0xfcpuSBfx5S';
-  
+  private static clientID = '45085932959-d7fl97m5qaomr02vttqoa05cabncrhnb.apps.googleusercontent.com';  
 
   constructor() {}
 
@@ -24,10 +22,12 @@ export class SignInService {
               fjs.parentNode.insertBefore(js, fjs);
               js.onload = function () {
                   window.gapi.load('auth2', function () {
-                      window.gapi.auth2.init({ client_id: SignInService.clientID, 'scope': 'profile email' });
+                      window.gapi.auth2.init({ client_id: SignInService.clientID, 'scope': 'profile email https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.upload' });
                       c.auth = window.gapi.auth2.getAuthInstance();
-                      if(c.isUserSignedIn)
-                        c.getUser();
+                      c.auth.then(function(response){
+                        if(c.isUserSignedIn)
+                           c.getUser();
+                      });
                   });
               };
 
@@ -38,10 +38,9 @@ export class SignInService {
       }  
   }
   
-
    signIn(){
      if(this.auth){
-       this.auth.signIn({ 'scope': 'profile email' }).then(()=>{
+       this.auth.signIn().then(()=>{
             this.getUser();
          });
      }
@@ -64,6 +63,7 @@ export class SignInService {
   }
 
   get token(){
+    debugger;
     return this.auth && this.auth.currentUser && this.auth.currentUser.get().Zi.access_token;
   }
 }

@@ -14,3 +14,8 @@
     color: #fff;
     line-height: 17px;
 }
+
+.flat-bottom {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
