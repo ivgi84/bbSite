@@ -19,6 +19,8 @@ export class UploadComponent implements OnInit{
     hig: ['Boom Beach','Boom Beach play','Boom Beach game','boom beach guide','boom beach attack','boom beach strategy','Boom Beach tactics','Boom Beach how to attack','Boom Beach tanks attack','Boom Beach scorchers attack','Boom Beach tanks','Boom Beach scorchers','Boom Beach top players','Boom Beach Imitation game','Imitation game','Imitation game guide','Imitation game all stages','Imitation game stages 1-7','Imitation game how to attack','Imitation game tanks attack','Imitation game scorchers attack'],
     wf:  ['Boom Beach','Boom Beach play','Boom Beach game','boom beach guide','boom beach attack','boom beach strategy','Boom Beach tactics','Boom Beach how to attack','Boom Beach tanks attack','Boom Beach scorchers attack','Boom Beach tanks','Boom Beach scorchers','Boom Beach top players','boom beach factory','War Factory','Boom Beach Was factory','Boom Beach war factory attack','Boom Beach War Factory attack guide','War Factory guide','How To attack war factory']};
 
+  uploadProgress:Object;
+
   eventTypes:Array<Object> = [
     { index:'t8', text:'Dr. T Base attack level 8' },
     { index:'t20', text:'Dr. T Base attack level 20' },
@@ -40,6 +42,13 @@ export class UploadComponent implements OnInit{
 
   constructor(private uploadService: UploadService) {}
 
+    ngOnInit() {
+    this.uploadService.progress$.subscribe(data=>{
+      console.log(data);
+        this.uploadProgress = data+'%';
+    });
+  }
+
   onSubmit(){
     console.log(this.video)
     this.isSubmited = true;
@@ -55,8 +64,6 @@ export class UploadComponent implements OnInit{
        this.video.tags = this.tags[event];
        console.log(this.video.tags);
   }
-  ngOnInit() {
-    
-  }
+
 
 }

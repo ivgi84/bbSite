@@ -10,20 +10,19 @@ export class UploadService {
 
   private accessToken:string = null;
   private uploadStartTime = 0;
-  
+  public progress$ = new Observable();
+  private progressObserver;
+
   constructor(private SignInService:SignInService) {
 
-    // this.accessToken = SignInService.token;
-    
-    // console.log(window.gapi, this);
-    // this.progress$ = Observable.create(observer => {
-    //     this.progressObserver = observer
-    // }).share();
+    this.progress$ = Observable.create(observer => {
+        this.progressObserver = observer
+    }).share();
+
    }
 
    upload(video){
     this.accessToken = this.SignInService.token;
-      console.log(this.accessToken);
      let metadata = {
        snippet:{
          title:video.title,
@@ -35,7 +34,6 @@ export class UploadService {
          privacyStatus:video.privacy
        }
      };
-     debugger
      let uploader = new MediaUploader({
         baseUrl: 'https://www.googleapis.com/upload/youtube/v3/videos',
         file: video.file,
@@ -58,14 +56,17 @@ export class UploadService {
           }
         }.bind(this),
         onProgress: function(data) {
-          debugger;
-          var currentTime = Date.now();
-          var bytesUploaded = data.loaded;
-          var totalBytes = data.total;
+          let currentTime = Date.now();
+          let bytesUploaded = data.loaded;
+          let totalBytes = data.total;
           // The times are in millis, so we need to divide by 1000 to get seconds.
-          var bytesPerSecond = bytesUploaded / ((currentTime - this.uploadStartTime) / 1000);
-          var estimatedSecondsRemaining = (totalBytes - bytesUploaded) / bytesPerSecond;
-          var percentageComplete = (bytesUploaded * 100) / totalBytes;
+          let bytesPerSecond = bytesUploaded / ((currentTime - this.uploadStartTime) / 1000);
+          let estimatedSecondsRemaining = (totalBytes - bytesUploaded) / bytesPerSecond;
+          let percentageComplete = ((bytesUploaded * 100) / totalBytes).toFixed(0);
+
+          this.progress$ = percentageComplete;
+          this.progressObserver.next(this.progress$);
+
         }.bind(this),
         onComplete: function(data) {
           debugger;
