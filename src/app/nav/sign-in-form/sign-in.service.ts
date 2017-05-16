@@ -63,7 +63,6 @@ export class SignInService {
   }
 
   get token(){
-    debugger;
     return this.auth && this.auth.currentUser && this.auth.currentUser.get().Zi.access_token;
   }
 }

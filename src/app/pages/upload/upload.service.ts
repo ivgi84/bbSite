@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { SignInService } from '../../nav/sign-in-form/sign-in.service';
 declare var window:any;
 declare var MediaUploader: any;
@@ -10,18 +10,23 @@ export class UploadService {
 
   private accessToken:string = null;
   private uploadStartTime = 0;
-  public progress$ = new Observable();
-  private progressObserver;
+  private videoId:any = null;
+  readonly STATUS_POLLING_INTERVAL_MILLIS = 20 * 1000; // 20 sec
+  progressObserver;
+  statusObserver;
 
-  constructor(private SignInService:SignInService) {
-
-    this.progress$ = Observable.create(observer => {
+  progress$ = Observable.create(observer => {
         this.progressObserver = observer
-    }).share();
+  }).share();
 
-   }
+  status$ = Observable.create(observer =>{
+      this.statusObserver = observer;
+  }).share();
+
+  constructor(private SignInService:SignInService) {}
 
    upload(video){
+  
     this.accessToken = this.SignInService.token;
      let metadata = {
        snippet:{
@@ -42,20 +47,17 @@ export class UploadService {
         params: {
           part: Object.keys(metadata).join(',')
         },
-        onError: function(data) {
-          debugger;
-          var message = data;
-          // Assuming the error is raised by the YouTube API, data will be
-          // a JSON string with error.message set. That may not be the
-          // only time onError will be raised, though.
+        onError: (data)=> {
+          let message = data;
           try {
-            var errorResponse = JSON.parse(data);
+            let errorResponse = JSON.parse(data);
             message = errorResponse.error.message;
           } finally {
-            console.log(message);
+            this.statusObserver.next(message);
           }
-        }.bind(this),
-        onProgress: function(data) {
+        },
+        onProgress: (data)=> {
+          this.statusObserver.next('Uploading');
           let currentTime = Date.now();
           let bytesUploaded = data.loaded;
           let totalBytes = data.total;
@@ -64,23 +66,50 @@ export class UploadService {
           let estimatedSecondsRemaining = (totalBytes - bytesUploaded) / bytesPerSecond;
           let percentageComplete = ((bytesUploaded * 100) / totalBytes).toFixed(0);
 
-          this.progress$ = percentageComplete;
-          this.progressObserver.next(this.progress$);
+          this.progressObserver.next(percentageComplete);
 
-        }.bind(this),
-        onComplete: function(data) {
-          debugger;
-          var uploadResponse = JSON.parse(data);
+        },
+        onComplete: (data)=> {
+          this.statusObserver.next('Upload Complete');
+          let uploadResponse = JSON.parse(data);
           this.videoId = uploadResponse.id;
-          //this.pollForVideoStatus();
-        }.bind(this)
+          this.pollForVideoStatus();
+        }
      });
-     this.uploadStartTime = Date.now();
+      this.uploadStartTime = Date.now();
       uploader.upload();
-     
-      
-      console.log(video);
    }
 
+
+   pollForVideoStatus(){
+      window.gapi.client.request({
+          path:'/youtube/v3/videos',
+          params:{
+            part:'status,player',
+            id:this.videoId
+          },
+          callback: (response)=>{
+            debugger;
+              if(response.error){
+                console.log(response.error.message);
+                setTimeout(this.pollForVideoStatus(), this.STATUS_POLLING_INTERVAL_MILLIS);
+              }
+              else{
+                let uploadStatus = response.items[0].status.uploadStatus;
+                switch(uploadStatus) {
+                  case 'uploaded':
+                    this.statusObserver.next('the video is being processed');
+                    setTimeout(this.pollForVideoStatus(), this.STATUS_POLLING_INTERVAL_MILLIS);
+                  break;
+                  case 'processed':
+                    this.statusObserver.next('The vieo has been processed successfully');
+                  break
+                  default:
+                  this.statusObserver.next('Transcoding failed');
+                }
+              }
+          }
+      });
+   }
 
 }
