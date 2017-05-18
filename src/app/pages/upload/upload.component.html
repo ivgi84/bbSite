@@ -8,10 +8,11 @@
         <div class="col-md-7">
             <form #videoForm="ngForm">
                 <div class="form-group">
-                    <label>Choose an Event</label>
+                    <label for=event>Choose an Event</label>
                     <select class="form-control" [(ngModel)]="video.event" name="event" (change)="setTags(video.event)">
                       <option *ngFor="let eventType of eventTypes" [value]="eventType.index">{{eventType.text}}</option>
                     </select>
+
                 </div>
                 <div class="form-group">
                     <label for="title">Video Title</label>

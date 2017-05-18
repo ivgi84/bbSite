@@ -1,3 +1,4 @@
+import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { User } from './user';
@@ -8,42 +9,52 @@ export class SignInService {
 
   private static clientID = '45085932959-d7fl97m5qaomr02vttqoa05cabncrhnb.apps.googleusercontent.com';  
 
-  constructor() {}
-
-  private auth:any;
+  private auth:any;  
   public userSbj = new Subject();
 
-  init(){  
-    if (document.readyState === "complete" || document.readyState === "interactive") {
-          (function (d, s, id, c) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              fjs.parentNode.insertBefore(js, fjs);
-              js.onload = function () {
-                  window.gapi.load('auth2', function () {
-                      window.gapi.auth2.init({ client_id: SignInService.clientID, 'scope': 'profile email https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.upload' });
-                      c.auth = window.gapi.auth2.getAuthInstance();
-                      c.auth.then(function(response){
-                        if(c.isUserSignedIn)
-                           c.getUser();
-                      });
-                  });
-              };
+  constructor() {}
 
-              js.src = "https://apis.google.com/js/client:plusone.js";
-          } (document, 'script', 'google-jssdk',this));
+  loadApi(){
+    return new Promise((resolve, reject)=>{
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        (function (d, s, id, c) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            fjs.parentNode.insertBefore(js, fjs);
+            js.onload = function () {
+                window.gapi.load('auth2', function () {
+                  window.gapi.auth2.init({ client_id: SignInService.clientID, 'scope': 'profile email https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.upload' });
+                  c.auth = window.gapi.auth2.getAuthInstance();
+                  resolve();
+                });
+            };
+            js.src = "https://apis.google.com/js/client:plusone.js";
+        } (document, 'script', 'google-jssdk',this));
       } else {
           document.addEventListener("DOMContentLoaded", this.init.bind(this));
-      }  
+      } 
+    })
   }
+
+  init() {
+    this.loadApi().then(()=>{
+      this.auth.then((response)=> {
+        this.isUserSignedIn().then((res) => {
+          if(res)
+            this.getUser()
+        })
+      });
+    });
+  }
+
   
    signIn(){
-     if(this.auth){
+     this.isUserSignedIn().then(res=>{
        this.auth.signIn().then(()=>{
             this.getUser();
          });
-     }
+     })
    }
 
    signOut(){
@@ -52,8 +63,11 @@ export class SignInService {
      });
    }
 
-   get isUserSignedIn(){
-     return this.auth.isSignedIn.get();
+   isUserSignedIn(){
+      if(this.auth)
+        return Promise.resolve(this.auth.isSignedIn.get());
+
+        return Promise.reject(false);
    }
 
   getUser(){
