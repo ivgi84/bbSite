@@ -17,11 +17,11 @@ export class UploadService {
 
   progress$ = Observable.create(observer => {
         this.progressObserver = observer
-  }).share();
+  });
 
   status$ = Observable.create(observer =>{
       this.statusObserver = observer;
-  }).share();
+  });
 
   constructor(private SignInService:SignInService) {}
 
