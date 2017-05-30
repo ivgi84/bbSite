@@ -1,6 +1,5 @@
-import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject, Observer } from 'rxjs/Rx';
 import { User } from './user';
 declare var window:any;
 
@@ -9,8 +8,8 @@ export class SignInService {
 
   private static clientID = '45085932959-d7fl97m5qaomr02vttqoa05cabncrhnb.apps.googleusercontent.com';  
 
-  private auth:any;  
-  public userSbj = new Subject();
+  auth:any = null;
+  userSbj = new Subject();
 
   constructor() {}
 
@@ -38,23 +37,19 @@ export class SignInService {
   }
 
   init() {
-    this.loadApi().then(()=>{
-      this.auth.then((response)=> {
-        this.isUserSignedIn().then((res) => {
-          if(res)
-            this.getUser()
-        })
-      });
+     this.loadApi().then(()=>{
+      this.auth.then(()=>{
+        if(this.isUserSignedIn()){
+          this.getUser();
+        }
+      })
     });
   }
 
-  
    signIn(){
-     this.isUserSignedIn().then(res=>{
-       this.auth.signIn().then(()=>{
-            this.getUser();
-         });
-     })
+     this.auth.signIn().then(()=>{
+        this.getUser();
+     });
    }
 
    signOut(){
@@ -65,9 +60,9 @@ export class SignInService {
 
    isUserSignedIn(){
       if(this.auth)
-        return Promise.resolve(this.auth.isSignedIn.get());
-
-        return Promise.reject(false);
+        return this.auth.isSignedIn.get()
+      
+        return undefined;
    }
 
   getUser(){
