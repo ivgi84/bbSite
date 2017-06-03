@@ -1,4 +1,4 @@
-import { Component, OnInit,OnChanges, Input } from '@angular/core';
+import { Component, OnInit,OnChanges, Input, OnDestroy } from '@angular/core';
 import { Video } from '../video'; 
 import { VideoStats } from '../video-stats';
 import { Comment } from '../comment'; 
@@ -9,7 +9,7 @@ import { VideoService } from '../video.service';
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.css']
 })
-export class VideoComponent implements OnInit, OnChanges {
+export class VideoComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() videoSrc:string;
   @Input() video:Video;
@@ -50,6 +50,9 @@ export class VideoComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {  }
+  ngOnDestroy(){
+  
+  }
 
   ngOnChanges(){
     this.getStats();

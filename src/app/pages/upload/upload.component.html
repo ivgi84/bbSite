@@ -10,10 +10,27 @@
                 <div class="form-group">
                     <label for=event>Choose an Event</label>
                     <select class="form-control" [(ngModel)]="video.event" name="event" (change)="setTags(video.event)">
-                      <option *ngFor="let eventType of eventTypes" [value]="eventType.index">{{eventType.text}}</option>
+                        <option *ngFor="let eventType of eventTypes" [value]="eventType.index">{{eventType.text}}</option>
                     </select>
-
                 </div>
+                <div class="form-group tags" *ngIf="video.tags.length > 0">
+                    <label>Predefined tags for this video type</label> <br>
+                    <div class="tag" *ngFor="let tag of video.tags">
+                        <span class="tagContent">{{tag}}</span>
+                        <span class="glyphicon glyphicon-trash float-right" (click)="deleteTag(tag)"></span>
+                    </div>
+                    <div class="tagManager col-md-12">
+                        <label>Tag Manager</label>
+                        <div class="clearfix"></div>
+                        <div class="form-group addTags">
+                            <input #newTag type="text" class="form-control mb10" id="addTag" placeholder="add tag" (keyup)="tagCheck($event.target.value)">
+                            <input type="button" class="btn btn-success" value="add tag" (click)="addNewTag(newTag.value)">
+                            <input type="button" class="btn btn-warning float-right" value="Clear all tags" (click)="clearTags()">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
                 <div class="form-group">
                     <label for="title">Video Title</label>
                     <input [(ngModel)]="video.title" type="text" class="form-control" id="title" placeholder="Title" name="title" required>
@@ -44,7 +61,7 @@
                     </div>
                 </div>
                 <div class="status">
-                    <h4>Current video status: {{uploadStatus}}</h4>
+                    <h4>Video status: {{uploadStatus}}</h4>
                 </div>
             </div>
         </div>

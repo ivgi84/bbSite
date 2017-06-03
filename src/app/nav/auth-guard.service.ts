@@ -12,35 +12,38 @@ export class AuthGuard implements CanActivate {
 constructor(private signInService: SignInService, private router: Router) {}
   
   debugger;
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> {
-    debugger;
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     let url: string = state.url;
-    
     return this.checkLogin(url);
   }
 
-  checkLogin(url: string): Promise<boolean> {
+  checkLogin(url: string): boolean {
 
-  if(this.signInService.auth===null){
-    this.signInService.init();
-    
-    this.signInService.userSbj.subscribe((user:User) => {
-        this.router.navigate([url]);
-    });
-  }
-  else{
-    return new Promise((resolve,reject)=>{
-      if(this.signInService.isUserSignedIn())
-        resolve(true);
-      else{
-          this.router.navigate(['']);
-          resolve(false);
+      if(!!this.signInService.isUserSignedIn()){
+        return true;
       }
-    });
-  }
-    // // Store the attempted URL for redirecting
-    // //this.authService.redirectUrl = url;
+      else{
+        this.router.navigate(['']);
+      }
+        
+  //TODO: check later autologin
+  // if(this.signInService.auth===null){
+  //   this.signInService.init();
     
+  //   this.signInService.userSbj.subscribe((user:User) => {
+  //       this.router.navigate([url]);
+  //   });
+  // }
+  // else{
+  //   return new Promise((resolve,reject)=>{
+  //     if(this.signInService.isUserSignedIn())
+  //       resolve(true);
+  //     else{
+  //         this.router.navigate(['']);
+  //         resolve(false);
+  //     }
+  //   });
+  // }
   }
 
 }

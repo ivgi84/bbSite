@@ -1,6 +1,7 @@
-import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Subject } from 'rxjs/Rx';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UploadService } from './upload.service';
+
 
 @Component({
   selector: 'bb-upload',
@@ -8,9 +9,19 @@ import { UploadService } from './upload.service';
   styleUrls: ['./upload.component.css'],
   providers:[UploadService]
 })
-export class UploadComponent implements OnInit{
+export class UploadComponent implements OnInit, OnDestroy{
 
-  constructor(private uploadService: UploadService, private ref: ChangeDetectorRef) {}
+  constructor(private uploadService: UploadService, private ref: ChangeDetectorRef) {
+    this.tagChange
+    .debounceTime(750)
+    .subscribe(data=>{
+      this.manageTag(data);
+    })
+  }
+
+  private searchObserver = null;
+
+  private tagChange = new Subject<any>();
 
   private file = null;
 
@@ -63,8 +74,35 @@ export class UploadComponent implements OnInit{
     }
   }
   setTags(event){
-       this.video.tags = this.tags[event];
+    this.video.tags = this.tags[event];
+  }
+  deleteTag(tag){
+    this.video.tags.splice(this.video.tags.indexOf(tag), 1);
+  }
+  addNewTag(tag:string){
+    if(this.video.tags.indexOf(tag) == -1){
+      this.video.tags.push(tag);
+    }
+    else{
+      console.log('Already Exists');
+    }
   }
 
+  clearTags(){
+    this.video.tags=[];
+  }
+  
+  tagCheck(e){
+    this.tagChange.next(e);
+  }
+  manageTag(tag:string){
+    if(this.video.tags.indexOf(tag) == -1){
+         this.video.tags.push(tag);
+     };
+  }
+
+  ngOnDestroy(){
+    this.tagChange.unsubscribe();
+  }
 
 }
