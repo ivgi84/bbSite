@@ -40,7 +40,10 @@ export class SignInService {
      this.loadApi().then(()=>{
       this.auth.then(()=>{
         if(this.isUserSignedIn()){
-          this.getUser();
+          this.getUser();// return object with 2 properties: isLoggedIn: true, user: userk
+        }
+        else{
+          this.userSbj.next(false); // return object with 2 properties: isLoggedIn: boolean, user: null
         }
       })
     });

@@ -11,15 +11,7 @@ import { UploadService } from './upload.service';
 })
 export class UploadComponent implements OnInit, OnDestroy{
 
-  constructor(private uploadService: UploadService, private ref: ChangeDetectorRef) {
-    this.tagChange
-    .debounceTime(750)
-    .subscribe(data=>{
-      this.manageTag(data);
-    })
-  }
-
-  private searchObserver = null;
+  constructor(private uploadService: UploadService, private ref: ChangeDetectorRef) {}
 
   private tagChange = new Subject<any>();
 
@@ -54,7 +46,13 @@ export class UploadComponent implements OnInit, OnDestroy{
     tags: []
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+      this.tagChange
+        .debounceTime(750)
+        .subscribe(data=>{
+      this.manageTag(data);
+    })
+  }
 
   onSubmit(){
     this.isSubmited = true;
