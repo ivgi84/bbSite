@@ -39,6 +39,7 @@ export class UploadService {
          privacyStatus:video.privacy
        }
      };
+     debugger;
      let uploader = new MediaUploader({
         baseUrl: 'https://www.googleapis.com/upload/youtube/v3/videos',
         file: video.file,
@@ -53,11 +54,11 @@ export class UploadService {
             let errorResponse = JSON.parse(data);
             message = errorResponse.error.message;
           } finally {
-            this.statusObserver.next(message);
+            this.statusObserver.next({uploadFinished: true, message:message});
           }
         },
         onProgress: (data)=> {
-          this.statusObserver.next('Uploading');
+          this.statusObserver.next({uploadFinished: false,message:'Uploading'});
           let currentTime = Date.now();
           let bytesUploaded = data.loaded;
           let totalBytes = data.total;
@@ -70,7 +71,7 @@ export class UploadService {
 
         },
         onComplete: (data)=> {
-          this.statusObserver.next('Upload Complete');
+          this.statusObserver.next({uploadFinished: true,message:'Upload Complete'});
           let uploadResponse = JSON.parse(data);
           this.videoId = uploadResponse.id;
           this.pollForVideoStatus();
@@ -89,7 +90,6 @@ export class UploadService {
             id:this.videoId
           },
           callback: (response)=>{
-            debugger;
               if(response.error){
                 console.log(response.error.message);
                 setTimeout(this.pollForVideoStatus(), this.STATUS_POLLING_INTERVAL_MILLIS);
@@ -98,14 +98,14 @@ export class UploadService {
                 let uploadStatus = response.items[0].status.uploadStatus;
                 switch(uploadStatus) {
                   case 'uploaded':
-                    this.statusObserver.next('the video is being processed');
+                    this.statusObserver.next({uploadFinished: true, message:'the video is being processed'});
                     setTimeout(this.pollForVideoStatus(), this.STATUS_POLLING_INTERVAL_MILLIS);
                   break;
                   case 'processed':
-                    this.statusObserver.next('The vieo has been processed successfully');
+                    this.statusObserver.next({uploadFinished: true,message:'The vieo has been processed successfully'});
                   break
                   default:
-                  this.statusObserver.next('Transcoding failed');
+                  this.statusObserver.next({uploadFinished: true,message:'Transcoding failed'});
                 }
               }
           }

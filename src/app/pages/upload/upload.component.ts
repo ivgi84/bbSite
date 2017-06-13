@@ -1,7 +1,12 @@
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Subject } from 'rxjs/Rx';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UploadService } from './upload.service';
 
+interface status {
+  uploadFinished:boolean,
+  message:string
+}
 
 @Component({
   selector: 'bb-upload',
@@ -25,7 +30,7 @@ export class UploadComponent implements OnInit, OnDestroy{
     wf:  ['Boom Beach','Boom Beach play','Boom Beach game','boom beach guide','boom beach attack','boom beach strategy','Boom Beach tactics','Boom Beach how to attack','Boom Beach tanks attack','Boom Beach scorchers attack','Boom Beach tanks','Boom Beach scorchers','Boom Beach top players','boom beach factory','War Factory','Boom Beach Was factory','Boom Beach war factory attack','Boom Beach War Factory attack guide','War Factory guide','How To attack war factory']};
 
   uploadProgress:String ='';
-  uploadStatus:String ='';
+  uploadStatus:status = {uploadFinished:true, message:''};
 
   eventTypes:Array<Object> = [
     { index:'t8', text:'Dr. T Base attack level 8' },
@@ -60,6 +65,7 @@ export class UploadComponent implements OnInit, OnDestroy{
       this.uploadProgress = data+'%';
     });
     this.uploadService.status$.subscribe(data=>{
+      debugger;
         this.uploadStatus = data;
         this.ref.detectChanges();
     });

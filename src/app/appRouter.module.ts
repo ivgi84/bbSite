@@ -6,6 +6,7 @@ import { FormsModule }          from '@angular/forms';
 import { VideoModule }          from './videos/video.module';
 
 import { AuthGuard } from './nav/auth-guard.service';
+import { CanDeactivateUpload } from './nav/upload.guard';
 
 import { HomeComponent }        from './pages/home/home.component'
 import { UploadComponent }      from './pages/upload/upload.component';
@@ -17,6 +18,7 @@ const appRoutes: Routes = [
   { path: 'edit',component: EditComponent },
   { path: 'upload',
     canActivate: [AuthGuard],
+    canDeactivate:[CanDeactivateUpload],
     component: UploadComponent },
 ];
 
@@ -24,7 +26,7 @@ const appRoutes: Routes = [
   declarations:[HomeComponent, EditComponent, UploadComponent],
   imports: [CommonModule, VideoModule, FormsModule, RouterModule.forRoot(appRoutes) ],
   exports: [ RouterModule ],
-  providers:[AuthGuard]
+  providers:[AuthGuard, CanDeactivateUpload]
 })
 
 
