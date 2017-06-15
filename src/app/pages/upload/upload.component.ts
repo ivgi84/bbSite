@@ -1,3 +1,5 @@
+import { CanDeactivate } from '@angular/router';
+import { CanDeactivateGuard } from '../../nav/can-deactivate.guard';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Subject } from 'rxjs/Rx';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
@@ -14,7 +16,7 @@ interface status {
   styleUrls: ['./upload.component.css'],
   providers:[UploadService]
 })
-export class UploadComponent implements OnInit, OnDestroy{
+export class UploadComponent implements OnInit, OnDestroy, CanDeactivateGuard {
 
   constructor(private uploadService: UploadService, private ref: ChangeDetectorRef) {}
 
@@ -107,6 +109,10 @@ export class UploadComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(){
     this.tagChange.unsubscribe();
+  }
+
+  canDeactivate(){
+    return this.uploadStatus.uploadFinished;
   }
 
 }

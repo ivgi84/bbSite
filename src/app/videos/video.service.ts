@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/Rx';
-import { Video } from './video';
+import { Video } from './models/video';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
