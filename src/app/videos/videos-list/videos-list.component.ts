@@ -1,6 +1,6 @@
 import { Component, DebugNode, OnInit, Output } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Video } from '../video';
+import { Video } from '../models/video';
 
 import { VideoService } from '../video.service';
 

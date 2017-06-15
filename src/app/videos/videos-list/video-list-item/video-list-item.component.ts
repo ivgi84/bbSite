@@ -1,5 +1,5 @@
 import { ApplicationInitStatus, Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { Video } from '../video';
+import { Video } from '../../models/video';
 
 @Component({
   moduleId: module.id,

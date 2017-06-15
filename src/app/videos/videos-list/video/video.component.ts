@@ -1,8 +1,8 @@
 import { Component, OnInit,OnChanges, Input, OnDestroy } from '@angular/core';
-import { Video } from '../video'; 
-import { VideoStats } from '../video-stats';
-import { Comment } from '../comment'; 
-import { VideoService } from '../video.service';
+import { Video } from '../../models/video'; 
+import { VideoStats } from '../../models/video-stats';
+import { Comment } from '../../models/comment'; 
+import { VideoService } from '../../video.service';
 
 @Component({
   selector: 'bb-video',
@@ -49,10 +49,8 @@ export class VideoComponent implements OnInit, OnChanges, OnDestroy {
     )
   }
 
-  ngOnInit() {  }
-  ngOnDestroy(){
-  
-  }
+  ngOnInit() {}
+  ngOnDestroy(){}
 
   ngOnChanges(){
     this.getStats();
