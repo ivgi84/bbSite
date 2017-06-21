@@ -102,7 +102,7 @@ export class UploadComponent implements OnInit, OnDestroy, CanDeactivateGuard {
     this.tagChange.next(e);
   }
   manageTag(tag:string){
-    if(this.video.tags.indexOf(tag) == -1){
+    if(tag.length >= 3 && this.video.tags.indexOf(tag) == -1){
          this.video.tags.push(tag);
      };
   }
